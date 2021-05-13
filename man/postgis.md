@@ -15,7 +15,10 @@ PostGISとは、地理空間情報を取り扱うためのPostgreSQL向け拡張
 また、一部の演算子についてはPostgreSQLのGiST(Generalized Search Tree)の仕組みを用いてR木による高速な検索も可能になっています。
 2001年に最初のバージョンが公開されて以降、20年以上にわたり開発者コミュニティによって機能強化やメンテナンスが行われています。
 }
-@en{iiiiii}
+@en{
+PostGIS is an extension to PostgreSQL to utilize geographic information. PostGIS has data types for geographic data (e.g. point, line, polygon, etc) and a lot of functions/operators to evaluate them, for example, getting the distance, judging within or without and juding intersecting or not.
+Furthermore, some of the operators can use GiST which included in PostgreSQL and enables fast search by the R-Tree.
+}
 
 @ja{
 これらPostGISの提供する関数や演算子は、総数で500を超える非常に大規模なものです。
