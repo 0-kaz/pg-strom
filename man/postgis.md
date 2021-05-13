@@ -4,7 +4,7 @@
 @ja{
 本章ではGPU版PostGISについて説明します。
 }
-@en{}
+@en{aaaaaa}
 
 @ja:##概要
 @en:##Overview
@@ -15,8 +15,7 @@ PostGISとは、地理空間情報を取り扱うためのPostgreSQL向け拡張
 また、一部の演算子についてはPostgreSQLのGiST(Generalized Search Tree)の仕組みを用いてR木による高速な検索も可能になっています。
 2001年に最初のバージョンが公開されて以降、20年以上にわたり開発者コミュニティによって機能強化やメンテナンスが行われています。
 }
-
-@en{}
+@en{iiiiii}
 
 @ja{
 これらPostGISの提供する関数や演算子は、総数で500を超える非常に大規模なものです。
