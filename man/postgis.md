@@ -4,7 +4,7 @@
 @ja{
 本章ではGPU版PostGISについて説明します。
 }
-@en{aaaaaa}
+@en{This chapter describes PostGIS on GPU device.}
 
 @ja:##概要
 @en:##Overview
@@ -16,8 +16,9 @@ PostGISとは、地理空間情報を取り扱うためのPostgreSQL向け拡張
 2001年に最初のバージョンが公開されて以降、20年以上にわたり開発者コミュニティによって機能強化やメンテナンスが行われています。
 }
 @en{
-PostGIS is an extension to PostgreSQL to utilize geographic information. PostGIS has data types for geographic data (e.g. point, line, polygon, etc) and a lot of functions/operators to evaluate them, for example, getting the distance, judging within or without and juding intersecting or not.
-Furthermore, some of the operators can use GiST which included in PostgreSQL and enables fast search by the R-Tree.
+PostGIS is an extension to PostgreSQL to utilize geographic information. PostGIS provides data types called <code>Geometry</code> for handling geographic data such as points, lines, and polygons, as well as a large number of functions and operators for evaluating geographic data elements, such as distance calculation, inclusion, and intersection determination.
+In addition, some of the operators can search faster by the R-Tree using GiST(Generalized Search Tree) mechanism included in PostgreSQL.
+Since the first version was released in 2001, it has been enhanced and maintained by the developer community for over 20 years.
 }
 
 @ja{
@@ -38,7 +39,21 @@ Furthermore, some of the operators can use GiST which included in PostgreSQL and
 また、テーブル同士の結合条件がGiSTインデックス（R木）の利用に適する場合、GpuJoinはGiSTインデックス（R木）をGPU側にロードし、結合すべき行の絞り込みを高速化するために使用する事ができます。
 これは例えば、GPSから取得したモバイル機器の位置（点）とエリア定義データ（ポリゴン）を突き合わせるといった処理の高速化に寄与します。
 }
-@en{}
+@en{
+These functions and operators provided by PostGIS are very large, over 500 in total.
+For this reason, PG-Strom has ported only a few relatively frequently used PostGIS functions to the GPU.
+
+For example:
+
+- <code>geometry st_point(float8 lon,float8 lat)</code>
+    - Return a point with the given longitude and latitude as a Point of <code>Geometry</code> type.
+- <code>bool st_contains(geometry a,geometry b)</code>
+    - Determine if the geometry a contains the geometry b or not. 
+- <code>bool st_crosses(geometry,geometry)</code>
+    - Determine if the geometries intersect each other.
+- <code>text st_relate(geometry,geometry)</code>
+    - Return the relationship between geometries as a matrix representation of [DE-9IM(Dimensionally Extended 9-Intersection Model)](https://en.wikipedia.org/wiki/DE-9IM).
+}
 
 @ja:##PostGISの利用
 @en:##PostGIS Usage
@@ -48,12 +63,17 @@ GPU版PostGISを利用するために特別な設定は必要ありません。
 
 PostGISをパッケージ又はソースコードからインストールし、CREATE EXTENSION構文を用いてジオメトリデータ型やPostGIS関数が定義されていれば、PG-Stromはクエリに出現したPostGIS関数がGPUで実行可能かどうかを自動的に判定します。
 }
+@en{
+You can use PostGIS on GPU device without any configurations.
+
+If you have installed PostGIS from a package or source code, and have defined geometry data types and PostGIS functions using the CREATE EXTENSION syntax, PG-Strom will automatically determine if the PostGIS functions that appear in the query are executable on the GPU.
+}
 
 @ja{
 PostGIS自体のインストールについては、[PostGISのドキュメント](http://postgis.net/docs/postgis-ja.html)を参照してください。
 }
 @en{
-http://postgis.net/docs/
+Please refer to [the PostGIS documentaion](http://postgis.net/docs/) for installation.
 }
 
 @ja{
