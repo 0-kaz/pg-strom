@@ -3,8 +3,8 @@
  *
  * A background worker process that handles any interactions with GPU
  * ----
- * Copyright 2011-2023 (C) KaiGai Kohei <kaigai@kaigai.gr.jp>
- * Copyright 2014-2023 (C) PG-Strom Developers Team
+ * Copyright 2011-2026 (C) KaiGai Kohei <kaigai@kaigai.gr.jp>
+ * Copyright 2014-2026 (C) PG-Strom Developers Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the PostgreSQL License.
@@ -3647,6 +3647,14 @@ __loadKdsParquetMallocCallback(void *data, size_t bytesize)
 	return (void *)m_chunk->m_devptr;
 }
 
+static void
+__loadKdsParquetReleaseCallback(void *data)
+{
+	gpuMemChunk	  **p_chunk = (gpuMemChunk **)data;
+
+	gpuMemFree(*p_chunk);
+}
+
 static gpuMemChunk *
 gpuservLoadKdsParquet(gpuClient *gclient,
 					  kern_data_store *kds_head,
@@ -3655,13 +3663,14 @@ gpuservLoadKdsParquet(gpuClient *gclient,
 {
 	gpuMemChunk *m_chunk;
 	kern_data_store *kds;
-	const char	*error_message;
+	char		error_message[320];
 
 	kds = parquetReadOneRowGroup(pathname,
 								 kds_head,
 								 __loadKdsParquetMallocCallback,
+								 __loadKdsParquetReleaseCallback,
 								 &m_chunk,
-								 &error_message);
+								 error_message, sizeof(error_message));
 	if (!kds)
 	{
 		__gsLog("%s", error_message);
