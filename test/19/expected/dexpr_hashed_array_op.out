@@ -24,7 +24,7 @@ SELECT lo_orderkey
    Scan Quals OpCode: {ScalarArrayOpAny: elem=<slot=0, type='bpchar'> args=[{Const(array): value='{RAIL,SHIP,MAIL}'}, {Func(bool)::bpchareq args=[{Var(bpchar): slot=1, expr='lo_shipmode'}, {Var(bpchar): slot=0, expr='NULL::bpchar'}]}]}
    Projection OpCode: {Projection: layout=<2> arg={SaveExpr: <slot=2, type='int8'> arg={Var(int8): kvec=0x3400-5800, expr='lo_orderkey'}}}
    Fallback-desc: [<dest='0', expr='lo_orderkey', depth=0:1>, <dest='1', expr='lo_shipmode', depth=0:0>]
-   CUDA Stack Size: 4448
+   CUDA Stack Size: 4320
 (12 rows)
 
 -- IN-list with 4 constants should switch to HashedArrayOp
@@ -45,7 +45,7 @@ SELECT lo_orderkey
    Scan Quals OpCode: {HashedArrayOp: nslots=6 hash=(bpchar)[<hash:e99a53ea|TRUCK|t>, <hash:e7d7a8fc|RAIL|t>, <hash:7ad83bf6|MAIL|t>, <hash:b5b0202c|SHIP|t>, <default:f>] arg={Var(bpchar): slot=0, expr='lo_shipmode'}}
    Projection OpCode: {Projection: layout=<1> arg={SaveExpr: <slot=1, type='int8'> arg={Var(int8): kvec=0x3400-5800, expr='lo_orderkey'}}}
    Fallback-desc: [<dest='0', expr='lo_orderkey', depth=0:1>, <dest='1', expr='lo_shipmode', depth=0:0>]
-   CUDA Stack Size: 4304
+   CUDA Stack Size: 4176
 (12 rows)
 
 SET pg_strom.enabled = on;
