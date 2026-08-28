@@ -153,7 +153,15 @@ xpu_date_arrow_datum_store(kern_context *kcxt,
 
 struct pg_tz_ttinfo
 {								/* time type information */
+#if PG_VERSION_NUM >= 190000
+	/*
+	 *PG19 redefined 'tt_utoff' to int_fast32_t from int32, despite its name,
+	 * it actually has 64bit width in x86_64 platform.
+	 */
+	int_fast32_t tt_utoff;		/* UT offset in seconds */
+#else
 	int32_t		tt_utoff;		/* UT offset in seconds */
+#endif
 	bool		tt_isdst;		/* used to set tm_isdst */
 	int32_t		tt_desigidx;	/* abbreviation list index */
 	bool		tt_ttisstd;		/* transition is std time */
